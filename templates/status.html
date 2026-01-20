@@ -1,0 +1,401 @@
+<!-- status.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status - WhatsApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #111b21;
+            color: #e9edef;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            color: #00a884;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .my-status {
+            background: #202c33;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .status-header h2 {
+            font-size: 18px;
+        }
+
+        .add-status-btn {
+            background: #00a884;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .add-status-btn:hover {
+            background: #008069;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .status-card {
+            background: #202c33;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .status-card:hover {
+            transform: scale(1.02);
+        }
+
+        .status-media {
+            width: 100%;
+            height: 200px;
+            background: #2a3942;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .status-media img, .status-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .status-text-display {
+            padding: 40px;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .status-info {
+            padding: 12px;
+        }
+
+        .status-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .status-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #6b7c85;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .status-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-time {
+            color: #8696a0;
+            font-size: 12px;
+        }
+
+        .create-status-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .create-status-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #202c33;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #e9edef;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .status-type-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status-type-tab {
+            flex: 1;
+            padding: 10px;
+            background: #111b21;
+            border: none;
+            border-radius: 8px;
+            color: #8696a0;
+            cursor: pointer;
+        }
+
+        .status-type-tab.active {
+            background: #00a884;
+            color: white;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            background: #2a3942;
+            border: 1px solid #3b4a54;
+            border-radius: 8px;
+            padding: 12px;
+            color: #e9edef;
+            font-size: 15px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00a884;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .color-option.selected {
+            border-color: white;
+        }
+
+        .submit-status-btn {
+            width: 100%;
+            padding: 12px;
+            background: #00a884;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .submit-status-btn:hover {
+            background: #008069;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="{% url 'chat_home' %}" class="back-link">← Back to Chats</a>
+            <h1>Status</h1>
+        </div>
+
+        <div class="my-status">
+            <div class="status-header">
+                <h2>My Status</h2>
+                <button class="add-status-btn" onclick="openCreateStatus()">+ Add Status</button>
+            </div>
+
+            <div class="status-grid">
+                {% for status in my_statuses %}
+                <div class="status-card">
+                    <div class="status-media">
+                        {% if status.status_type == 'text' %}
+                        <div class="status-text-display" style="background: {{ status.background_color }}">
+                            {{ status.content }}
+                        </div>
+                        {% elif status.status_type == 'image' %}
+                        <img src="{{ status.media_file.url }}" alt="Status">
+                        {% elif status.status_type == 'video' %}
+                        <video src="{{ status.media_file.url }}" controls></video>
+                        {% endif %}
+                    </div>
+                    <div class="status-info">
+                        <div class="status-time">{{ status.created_at|timesince }} ago</div>
+                    </div>
+                </div>
+                {% empty %}
+                <p style="color: #8696a0;">No statuses yet. Create your first status!</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <h2 style="margin: 24px 0 16px;">Recent Updates</h2>
+        <div class="status-grid">
+            {% for status in statuses %}
+            <div class="status-card">
+                <div class="status-media">
+                    {% if status.status_type == 'text' %}
+                    <div class="status-text-display" style="background: {{ status.background_color }}">
+                        {{ status.content }}
+                    </div>
+                    {% elif status.status_type == 'image' %}
+                    <img src="{{ status.media_file.url }}" alt="Status">
+                    {% elif status.status_type == 'video' %}
+                    <video src="{{ status.media_file.url }}"></video>
+                    {% endif %}
+                </div>
+                <div class="status-info">
+                    <div class="status-user">
+                        <div class="status-avatar">{{ status.user.username.0|upper }}</div>
+                        <span class="status-name">{{ status.user.username }}</span>
+                    </div>
+                    <div class="status-time">{{ status.created_at|timesince }} ago</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="create-status-modal" id="createStatusModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Status</h3>
+                <button class="close-modal" onclick="closeCreateStatus()">×</button>
+            </div>
+
+            <form id="statusForm" method="POST" action="{% url 'create_status' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="status-type-tabs">
+                    <button type="button" class="status-type-tab active" onclick="switchStatusType('text')">Text</button>
+                    <button type="button" class="status-type-tab" onclick="switchStatusType('image')">Image</button>
+                    <button type="button" class="status-type-tab" onclick="switchStatusType('video')">Video</button>
+                </div>
+
+                <input type="hidden" name="status_type" id="statusType" value="text">
+
+                <div id="textStatusSection">
+                    <textarea name="content" placeholder="What's on your mind?"></textarea>
+                    
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background: #075e54" onclick="selectColor('#075e54')"></div>
+                        <div class="color-option" style="background: #25d366" onclick="selectColor('#25d366')"></div>
+                        <div class="color-option" style="background: #128c7e" onclick="selectColor('#128c7e')"></div>
+                        <div class="color-option" style="background: #34b7f1" onclick="selectColor('#34b7f1')"></div>
+                        <div class="color-option" style="background: #ff6b6b" onclick="selectColor('#ff6b6b')"></div>
+                    </div>
+                </div>
+
+                <div id="mediaStatusSection" style="display: none;">
+                    <input type="file" name="media_file" accept="image/*,video/*" class="file-input">
+                    <label class="upload-btn" for="mediaFile">Choose File</label>
+                </div>
+
+                <button type="submit" class="submit-status-btn">Post Status</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openCreateStatus() {
+            document.getElementById('createStatusModal').classList.add('active');
+        }
+
+        function closeCreateStatus() {
+            document.getElementById('createStatusModal').classList.remove('active');
+        }
+
+        function switchStatusType(type) {
+            document.getElementById('statusType').value = type;
+            const tabs = document.querySelectorAll('.status-type-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (type === 'text') {
+                document.getElementById('textStatusSection').style.display = 'block';
+                document.getElementById('mediaStatusSection').style.display = 'none';
+            } else {
+                document.getElementById('textStatusSection').style.display = 'none';
+                document.getElementById('mediaStatusSection').style.display = 'block';
+            }
+        }
+
+        let selectedColor = '#075e54';
+        function selectColor(color) {
+            selectedColor = color;
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+    </script>
+</body>
+</html>

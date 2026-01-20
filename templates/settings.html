@@ -1,0 +1,365 @@
+
+<!-- settings.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - WhatsApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #111b21;
+            color: #e9edef;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #202c33;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #202c33;
+            padding: 20px;
+            border-bottom: 1px solid #2a3942;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .profile-section {
+            padding: 20px;
+            background: #111b21;
+            margin: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #6b7c85;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-info h2 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .profile-info p {
+            color: #8696a0;
+            font-size: 14px;
+        }
+
+        .settings-section {
+            margin: 16px;
+        }
+
+        .settings-group {
+            background: #111b21;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .settings-group-title {
+            padding: 16px;
+            color: #00a884;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .setting-item {
+            padding: 16px;
+            border-bottom: 1px solid #2a3942;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: 15px;
+        }
+
+        .setting-description {
+            color: #8696a0;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        select, input[type="text"], input[type="password"] {
+            background: #2a3942;
+            border: 1px solid #3b4a54;
+            color: #e9edef;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #00a884;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #3b4a54;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #00a884;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .save-btn {
+            background: #00a884;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            width: 100%;
+            margin: 16px 0;
+        }
+
+        .save-btn:hover {
+            background: #008069;
+        }
+
+        .back-link {
+            color: #00a884;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: #00a884;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="{% url 'chat_home' %}" class="back-link">← Back to Chats</a>
+            <h1>Settings</h1>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="profile-section">
+                <div class="profile-picture" onclick="document.getElementById('profilePic').click()">
+                    {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture.url }}" alt="Profile">
+                    {% else %}
+                    {{ user.username.0|upper }}
+                    {% endif %}
+                </div>
+                <input type="file" id="profilePic" name="profile_picture" class="file-input" accept="image/*">
+                <div class="profile-info">
+                    <h2>{{ user.username }}</h2>
+                    <p>{{ user.phone_number }}</p>
+                    <label class="upload-btn" for="profilePic">Change Photo</label>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <!-- Appearance -->
+                <div class="settings-group">
+                    <div class="settings-group-title">APPEARANCE</div>
+                    
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Theme</div>
+                            <div class="setting-description">Choose your preferred theme</div>
+                        </div>
+                        <select name="theme">
+                            <option value="light" {% if user.theme == 'light' %}selected{% endif %}>Light</option>
+                            <option value="dark" {% if user.theme == 'dark' %}selected{% endif %}>Dark</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Font Size</div>
+                            <div class="setting-description">Adjust text size</div>
+                        </div>
+                        <select name="font_size">
+                            <option value="small" {% if user.font_size == 'small' %}selected{% endif %}>Small</option>
+                            <option value="medium" {% if user.font_size == 'medium' %}selected{% endif %}>Medium</option>
+                            <option value="large" {% if user.font_size == 'large' %}selected{% endif %}>Large</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Wallpaper</div>
+                            <div class="setting-description">Customize chat background</div>
+                        </div>
+                        <label class="upload-btn" for="wallpaper">Choose</label>
+                        <input type="file" id="wallpaper" name="wallpaper" class="file-input" accept="image/*">
+                    </div>
+                </div>
+
+                <!-- Privacy -->
+                <div class="settings-group">
+                    <div class="settings-group-title">PRIVACY</div>
+                    
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Read Receipts</div>
+                            <div class="setting-description">Show blue ticks when you read messages</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="read_receipts" {% if user.read_receipts %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Last Seen</div>
+                            <div class="setting-description">Who can see when you're online</div>
+                        </div>
+                        <select name="last_seen_privacy">
+                            <option value="everyone" {% if user.last_seen_privacy == 'everyone' %}selected{% endif %}>Everyone</option>
+                            <option value="contacts" {% if user.last_seen_privacy == 'contacts' %}selected{% endif %}>My Contacts</option>
+                            <option value="nobody" {% if user.last_seen_privacy == 'nobody' %}selected{% endif %}>Nobody</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Profile Photo</div>
+                            <div class="setting-description">Who can see your profile photo</div>
+                        </div>
+                        <select name="profile_photo_privacy">
+                            <option value="everyone">Everyone</option>
+                            <option value="contacts">My Contacts</option>
+                            <option value="nobody">Nobody</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="settings-group">
+                    <div class="settings-group-title">SECURITY</div>
+                    
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">App Lock</div>
+                            <div class="setting-description">Require PIN or fingerprint to open WhatsApp</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="app_lock_enabled" {% if user.app_lock_enabled %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">App Lock PIN</div>
+                            <div class="setting-description">Set 6-digit PIN</div>
+                        </div>
+                        <input type="password" name="app_lock_pin" placeholder="Enter PIN" maxlength="6" value="{{ user.app_lock_pin }}">
+                    </div>
+
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Fingerprint Lock</div>
+                            <div class="setting-description">Use fingerprint to unlock</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="fingerprint_enabled" {% if user.fingerprint_enabled %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="save-btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

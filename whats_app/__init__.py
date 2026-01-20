@@ -1,0 +1,1 @@
+default_app_config = 'whats_app.apps.WhatsappConfig'
