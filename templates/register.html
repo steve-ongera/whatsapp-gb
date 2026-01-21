@@ -1,205 +1,810 @@
-<!-- register.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create WhatsApp Account</title>
+    <title>Create Account | WhatsApp</title>
     <style>
-        /* Same styles as login.html */
+        :root {
+            --whatsapp-green: #00a884;
+            --whatsapp-green-dark: #008069;
+            --whatsapp-green-light: #00e6a1;
+            --background-light: #f0f2f5;
+            --text-primary: #3b4a54;
+            --text-secondary: #667781;
+            --border-color: #e9edef;
+            --surface-white: #ffffff;
+            --error-red: #ff3b30;
+            --error-bg: #ffe6e6;
+            --success-green: #00a884;
+            --success-bg: #e6f4f1;
+            --hover-gray: #f5f6f6;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #00a884 0%, #008069 100%);
+            background: linear-gradient(135deg, var(--whatsapp-green) 0%, var(--whatsapp-green-dark) 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
+            line-height: 1.5;
         }
 
         .register-container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            padding: 48px;
+            background: var(--surface-white);
+            border-radius: 24px;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 56px 48px;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.4s ease;
         }
 
-        .logo {
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--whatsapp-green);
+        }
+
+        .logo-section {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
-        .logo h1 {
-            color: #00a884;
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--whatsapp-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            position: relative;
+        }
+
+        .logo-icon::after {
+            content: '👤';
+            color: white;
             font-size: 32px;
-            margin-bottom: 8px;
         }
 
-        .logo p {
-            color: #667781;
+        .logo-text h1 {
+            color: var(--whatsapp-green);
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .logo-text p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            gap: 8px;
+        }
+
+        .progress-step {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            width: 24px;
+            border-radius: 4px;
+            background: var(--whatsapp-green);
+        }
+
+        /* Error/Success Messages */
+        .notification {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
             font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .error-notification {
+            background: var(--error-bg);
+            color: var(--error-red);
+            border-left: 4px solid var(--error-red);
+        }
+
+        .success-notification {
+            background: var(--success-bg);
+            color: var(--success-green);
+            border-left: 4px solid var(--success-green);
+            display: none;
+        }
+
+        .notification-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Registration Form */
+        .registration-form {
+            animation: fadeIn 0.5s ease;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
-        .form-group label {
-            display: block;
-            color: #3b4a54;
+        .input-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
             font-size: 14px;
             margin-bottom: 8px;
             font-weight: 500;
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e9edef;
-            border-radius: 8px;
+        .char-count {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .country-code {
+            position: absolute;
+            left: 16px;
+            color: var(--text-secondary);
             font-size: 15px;
-            transition: border-color 0.3s;
+            pointer-events: none;
         }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #00a884;
-        }
-
-        .submit-btn {
+        .form-input {
             width: 100%;
-            padding: 14px;
-            background: #00a884;
-            color: white;
-            border: none;
-            border-radius: 8px;
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 500;
+            transition: all 0.2s ease;
+            background: var(--surface-white);
+            color: var(--text-primary);
+        }
+
+        .form-input.phone {
+            padding-left: 60px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--whatsapp-green);
+            box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #a0a7ac;
+        }
+
+        .form-input.error {
+            border-color: var(--error-red);
+        }
+
+        .form-input.success {
+            border-color: var(--success-green);
+        }
+
+        .input-feedback {
+            font-size: 12px;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+
+        .input-feedback.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .input-feedback.error {
+            color: var(--error-red);
+        }
+
+        .input-feedback.success {
+            color: var(--success-green);
+        }
+
+        .password-strength {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--error-red);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background: var(--error-red);
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background: #ffa500;
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background: var(--success-green);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: background 0.3s;
+            font-size: 18px;
+            padding: 4px;
+            transition: color 0.2s ease;
         }
 
-        .submit-btn:hover {
-            background: #008069;
+        .toggle-password:hover {
+            color: var(--text-primary);
         }
 
-        .error-message {
-            background: #fee;
-            color: #c00;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        /* Terms Checkbox */
+        .terms-group {
+            background: var(--background-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 32px 0;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .checkbox-input {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checkbox-label {
+            color: var(--text-secondary);
             font-size: 14px;
-            text-align: center;
+            line-height: 1.6;
         }
 
-        .help-text {
-            text-align: center;
-            margin-top: 20px;
-            color: #667781;
-            font-size: 13px;
-        }
-
-        .help-text a {
-            color: #00a884;
+        .checkbox-label a {
+            color: var(--whatsapp-green);
             text-decoration: none;
+            font-weight: 500;
         }
 
-        .help-text a:hover {
+        .checkbox-label a:hover {
             text-decoration: underline;
         }
 
-        .terms {
-            font-size: 12px;
-            color: #667781;
+        /* Submit Button */
+        .submit-button {
+            width: 100%;
+            padding: 16px;
+            background: var(--whatsapp-green);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: var(--whatsapp-green-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3);
+        }
+
+        .submit-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .submit-icon {
+            font-size: 18px;
+        }
+
+        /* Footer Links */
+        .auth-footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
             text-align: center;
-            margin-top: 16px;
-            line-height: 1.5;
+        }
+
+        .footer-link {
+            color: var(--whatsapp-green);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-link:hover {
+            color: var(--whatsapp-green-dark);
+            text-decoration: underline;
+        }
+
+        .footer-icon {
+            font-size: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 520px) {
+            .register-container {
+                padding: 40px 24px;
+                border-radius: 20px;
+            }
+            
+            .logo-icon {
+                width: 56px;
+                height: 56px;
+            }
+            
+            .logo-text h1 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .register-container {
+                padding: 32px 20px;
+            }
+            
+            .form-input {
+                padding: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="register-container">
-        <div class="logo">
-            <h1>Create Account</h1>
-            <p>Join WhatsApp today</p>
+        <div class="logo-section">
+            <div class="logo-icon"></div>
+            <div class="logo-text">
+                <h1>Create Account</h1>
+                <p>Join WhatsApp to start messaging</p>
+            </div>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
         </div>
 
         {% if error %}
-        <div class="error-message">{{ error }}</div>
+        <div class="notification error-notification">
+            <span class="notification-icon">⚠️</span>
+            <span>{{ error }}</span>
+        </div>
         {% endif %}
 
-        <form method="POST" action="{% url 'register' %}">
+        <div class="success-notification" id="successNotification">
+            <span class="notification-icon">✓</span>
+            <span>All fields look good! Ready to create your account.</span>
+        </div>
+
+        <form method="POST" action="{% url 'register' %}" class="registration-form" id="registrationForm">
             {% csrf_token %}
             
             <div class="form-group">
-                <label for="username">Name</label>
-                <input type="text" id="username" name="username" 
-                       placeholder="Enter your name" required>
+                <label class="input-label">
+                    <span>Full Name</span>
+                    <span class="char-count" id="nameCount">0/50</span>
+                </label>
+                <div class="input-wrapper">
+                    <input type="text" 
+                           class="form-input" 
+                           id="username" 
+                           name="username" 
+                           placeholder="Enter your full name"
+                           maxlength="50"
+                           required>
+                </div>
+                <div class="input-feedback" id="nameFeedback"></div>
             </div>
 
             <div class="form-group">
-                <label for="phone_number">Phone Number</label>
-                <input type="tel" id="phone_number" name="phone_number" 
-                       placeholder="+254712345678" required>
+                <label class="input-label">Phone Number</label>
+                <div class="input-wrapper">
+                    <span class="country-code">+</span>
+                    <input type="tel" 
+                           class="form-input phone" 
+                           id="phone_number" 
+                           name="phone_number" 
+                           placeholder="254 712 345 678"
+                           required
+                           pattern="\+?[0-9\s\-\(\)]+">
+                </div>
+                <div class="input-feedback" id="phoneFeedback"></div>
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" 
-                       placeholder="Create a password" required minlength="6">
+                <label class="input-label">
+                    <span>Password</span>
+                    <span class="char-count" id="passwordCount">0 characters</span>
+                </label>
+                <div class="input-wrapper">
+                    <input type="password" 
+                           class="form-input" 
+                           id="password" 
+                           name="password" 
+                           placeholder="Create a secure password"
+                           minlength="6"
+                           required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
+                </div>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                </div>
+                <div class="input-feedback" id="passwordFeedback"></div>
             </div>
 
             <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" 
-                       placeholder="Confirm your password" required>
+                <label class="input-label">Confirm Password</label>
+                <div class="input-wrapper">
+                    <input type="password" 
+                           class="form-input" 
+                           id="confirm_password" 
+                           name="confirm_password" 
+                           placeholder="Re-enter your password"
+                           required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('confirm_password')">👁️</button>
+                </div>
+                <div class="input-feedback" id="confirmFeedback"></div>
             </div>
 
-            <button type="submit" class="submit-btn">Create Account</button>
-
-            <div class="terms">
-                By creating an account, you agree to our Terms of Service and Privacy Policy
+            <div class="terms-group">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" 
+                           class="checkbox-input" 
+                           id="terms"
+                           name="terms"
+                           required>
+                    <label for="terms" class="checkbox-label">
+                        I agree to the <a href="#" target="_blank">Terms of Service</a> and 
+                        <a href="#" target="_blank">Privacy Policy</a>. I understand that WhatsApp 
+                        will send me SMS messages for verification and may use my phone number to 
+                        show my profile to other users.
+                    </label>
+                </div>
             </div>
+
+            <button type="submit" class="submit-button" id="submitButton">
+                <span class="submit-icon">✓</span>
+                <span>Create WhatsApp Account</span>
+            </button>
         </form>
 
-        <div class="help-text">
-            Already have an account? <a href="{% url 'login' %}">Login</a>
+        <div class="auth-footer">
+            <a href="{% url 'login' %}" class="footer-link">
+                <span class="footer-icon">←</span>
+                <span>Already have an account? Login</span>
+            </a>
         </div>
     </div>
 
     <script>
-        // Password validation
-        const form = document.querySelector('form');
-        form.addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
+        // DOM Elements
+        const form = document.getElementById('registrationForm');
+        const usernameInput = document.getElementById('username');
+        const phoneInput = document.getElementById('phone_number');
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm_password');
+        const termsCheckbox = document.getElementById('terms');
+        const submitButton = document.getElementById('submitButton');
+        const successNotification = document.getElementById('successNotification');
 
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match!');
+        // Character counters
+        usernameInput.addEventListener('input', function() {
+            const count = this.value.length;
+            document.getElementById('nameCount').textContent = `${count}/50`;
+            
+            // Validate name
+            const feedback = document.getElementById('nameFeedback');
+            if (count < 2) {
+                showFeedback(feedback, 'Please enter your full name', 'error');
+                this.classList.add('error');
+                this.classList.remove('success');
+            } else {
+                showFeedback(feedback, '✓ Name looks good', 'success');
+                this.classList.remove('error');
+                this.classList.add('success');
             }
+            validateForm();
         });
 
-        // Auto-format phone number
-        const phoneInput = document.getElementById('phone_number');
+        // Phone number formatting
         phoneInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
-            if (!value.startsWith('254') && value.length > 0) {
-                if (value.startsWith('0')) {
-                    value = '254' + value.substring(1);
-                } else if (value.startsWith('7') || value.startsWith('1')) {
-                    value = '254' + value;
+            
+            // Remove country code for formatting
+            if (value.startsWith('254')) {
+                value = value.substring(3);
+            }
+            
+            // Format with spaces
+            let formatted = '';
+            if (value.length > 0) {
+                formatted = '254 ' + value.substring(0, 3);
+                if (value.length > 3) {
+                    formatted += ' ' + value.substring(3, 6);
+                }
+                if (value.length > 6) {
+                    formatted += ' ' + value.substring(6, 9);
                 }
             }
-            e.target.value = '+' + value;
+            
+            e.target.value = formatted;
+            
+            // Validate phone number
+            const cleaned = formatted.replace(/\s+/g, '');
+            const feedback = document.getElementById('phoneFeedback');
+            
+            if (cleaned.length < 12) {
+                showFeedback(feedback, 'Enter a valid phone number', 'error');
+                this.classList.add('error');
+                this.classList.remove('success');
+            } else {
+                showFeedback(feedback, '✓ Valid phone number', 'success');
+                this.classList.remove('error');
+                this.classList.add('success');
+            }
+            validateForm();
+        });
+
+        // Password strength checker
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const count = password.length;
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const feedback = document.getElementById('passwordFeedback');
+            
+            document.getElementById('passwordCount').textContent = `${count} characters`;
+            
+            // Reset classes
+            strengthBar.className = 'password-strength-bar';
+            
+            if (count === 0) {
+                showFeedback(feedback, 'Enter a password', 'error');
+                this.classList.add('error');
+                this.classList.remove('success');
+                return;
+            }
+            
+            if (count < 6) {
+                strengthBar.classList.add('weak');
+                showFeedback(feedback, 'Password is too short (minimum 6 characters)', 'error');
+                this.classList.add('error');
+                this.classList.remove('success');
+            } else {
+                // Check password strength
+                let strength = 0;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+                
+                if (strength < 2) {
+                    strengthBar.classList.add('weak');
+                    showFeedback(feedback, 'Weak password. Add uppercase letters and numbers.', 'error');
+                    this.classList.add('error');
+                    this.classList.remove('success');
+                } else if (strength < 4) {
+                    strengthBar.classList.add('medium');
+                    showFeedback(feedback, 'Medium strength password', 'error');
+                    this.classList.remove('error');
+                    this.classList.remove('success');
+                } else {
+                    strengthBar.classList.add('strong');
+                    showFeedback(feedback, '✓ Strong password!', 'success');
+                    this.classList.remove('error');
+                    this.classList.add('success');
+                }
+            }
+            
+            validatePasswordMatch();
+            validateForm();
+        });
+
+        // Password confirmation
+        confirmInput.addEventListener('input', validatePasswordMatch);
+
+        function validatePasswordMatch() {
+            const password = passwordInput.value;
+            const confirm = confirmInput.value;
+            const feedback = document.getElementById('confirmFeedback');
+            
+            if (confirm.length === 0) {
+                showFeedback(feedback, 'Please confirm your password', 'error');
+                confirmInput.classList.add('error');
+                confirmInput.classList.remove('success');
+                return;
+            }
+            
+            if (password !== confirm) {
+                showFeedback(feedback, 'Passwords do not match', 'error');
+                confirmInput.classList.add('error');
+                confirmInput.classList.remove('success');
+            } else if (password.length >= 6) {
+                showFeedback(feedback, '✓ Passwords match', 'success');
+                confirmInput.classList.remove('error');
+                confirmInput.classList.add('success');
+            }
+            
+            validateForm();
+        }
+
+        // Terms checkbox validation
+        termsCheckbox.addEventListener('change', validateForm);
+
+        // Form validation
+        function validateForm() {
+            const isNameValid = usernameInput.value.length >= 2;
+            const isPhoneValid = phoneInput.value.replace(/\s+/g, '').length >= 12;
+            const isPasswordValid = passwordInput.value.length >= 6;
+            const isConfirmValid = passwordInput.value === confirmInput.value && confirmInput.value.length > 0;
+            const isTermsAccepted = termsCheckbox.checked;
+            
+            const isValid = isNameValid && isPhoneValid && isPasswordValid && isConfirmValid && isTermsAccepted;
+            
+            submitButton.disabled = !isValid;
+            
+            // Show/hide success notification
+            if (isValid) {
+                successNotification.style.display = 'flex';
+            } else {
+                successNotification.style.display = 'none';
+            }
+            
+            // Update progress indicator
+            const progressSteps = document.querySelectorAll('.progress-step');
+            let filledSteps = 0;
+            if (isNameValid) filledSteps++;
+            if (isPhoneValid) filledSteps++;
+            if (isPasswordValid && isConfirmValid) filledSteps++;
+            
+            progressSteps.forEach((step, index) => {
+                if (index < filledSteps) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            
+            return isValid;
+        }
+
+        // Helper functions
+        function showFeedback(element, message, type) {
+            element.textContent = message;
+            element.className = `input-feedback show ${type}`;
+        }
+
+        function togglePassword(fieldId) {
+            const input = document.getElementById(fieldId);
+            const button = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '👁️‍🗨️';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            if (!validateForm()) {
+                e.preventDefault();
+                return;
+            }
+            
+            // Clean phone number before submission
+            const cleanedPhone = phoneInput.value.replace(/\s+/g, '');
+            phoneInput.value = '+' + cleanedPhone;
+            
+            // Show loading state
+            submitButton.innerHTML = '<span class="submit-icon">⏳</span><span>Creating account...</span>';
+            submitButton.disabled = true;
+            
+            // Allow form to submit normally
+            return true;
+        });
+
+        // Initialize validation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            validateForm();
+            
+            // Add Kenyan flag icon for phone input
+            const countryCodeSpan = document.querySelector('.country-code');
+            if (countryCodeSpan) {
+                countryCodeSpan.innerHTML = '<span style="margin-right: 4px;">🇰🇪</span>+';
+            }
         });
     </script>
 </body>
